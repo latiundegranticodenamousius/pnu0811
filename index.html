@@ -1,4 +1,3 @@
-# pnu0811
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -42,11 +41,16 @@
       
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
         <div class="flex-1 cursor-pointer group" onclick="openProfileModal()" title="프로필 수정하기">
-          <div class="flex items-center gap-3 mb-2">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
             <span class="inline-block p-2 bg-emerald-600/50 backdrop-blur-md rounded-xl text-emerald-200 border border-emerald-400/30">
               <i data-lucide="sparkles" class="w-6 h-6"></i>
             </span>
             <span class="text-xs font-semibold uppercase tracking-widest text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">대나무 포트폴리오</span>
+            <!-- Cloud Sync Badge -->
+            <span id="cloud-sync-badge" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200 bg-emerald-900/80 px-2.5 py-1 rounded-full border border-emerald-400/20">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="sync-status-text">클라우드 연결 중...</span>
+            </span>
           </div>
           
           <h1 id="user-name-display" class="text-2xl md:text-3xl font-extrabold tracking-tight group-hover:text-emerald-200 transition-colors flex items-center gap-2">
@@ -193,7 +197,7 @@
               <option value="2학년 2학기">2학년 2학기</option>
               <option value="3학년 1학기">3학년 1학기</option>
               <option value="3학년 2학기">3학년 2학기</option>
-              <option value=" 기타/개인">기타/개인</option>
+              <option value="기타/개인">기타/개인</option>
             </select>
           </div>
 
@@ -274,9 +278,33 @@
     </div>
   </div>
 
-  <!-- Application Logic JavaScript -->
-  <script>
-    // Initial State
+  <!-- 4. Custom UI Confirm / Alert / Prompt Modal -->
+  <div id="custom-ui-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 text-center">
+      <div id="custom-ui-icon" class="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
+        <i data-lucide="info" class="w-6 h-6"></i>
+      </div>
+      <h4 id="custom-ui-title" class="text-base font-bold text-slate-800 mb-2">알림</h4>
+      <p id="custom-ui-message" class="text-xs text-slate-600 mb-4 leading-relaxed"></p>
+      
+      <div id="custom-ui-input-container" class="mb-4 hidden">
+        <input type="text" id="custom-ui-input" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm">
+      </div>
+
+      <div class="flex justify-center gap-2">
+        <button id="custom-ui-cancel-btn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-600 hidden">취소</button>
+        <button id="custom-ui-ok-btn" class="px-5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Integration & App Logic Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Application State
     let profileData = {
       name: "라티운데그랑티코 대나무시어스 대식 1세 the 쌍곡선 대나무",
       bio: "쌍곡선의 곡률을 닮은 대나무처럼 곧고 유연하게 학습하고 기록하는 포트폴리오 공간입니다. 클릭하여 자기소개를 수정하세요."
@@ -311,16 +339,162 @@
       }
     ];
 
-    let currentViewMode = 'all'; // 'all', 'period', 'subject', 'type'
+    let currentViewMode = 'all';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-    // Local Storage Helpers
-    function saveData() {
+    // UI Helper for Alerts & Confirms
+    window.showCustomModal = function({ title = "알림", message = "", showInput = false, defaultValue = "", showCancel = false, onOk = null }) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('custom-ui-modal');
+        const titleEl = document.getElementById('custom-ui-title');
+        const messageEl = document.getElementById('custom-ui-message');
+        const inputContainer = document.getElementById('custom-ui-input-container');
+        const inputEl = document.getElementById('custom-ui-input');
+        const cancelBtn = document.getElementById('custom-ui-cancel-btn');
+        const okBtn = document.getElementById('custom-ui-ok-btn');
+
+        titleEl.innerText = title;
+        messageEl.innerText = message;
+
+        if (showInput) {
+          inputContainer.classList.remove('hidden');
+          inputEl.value = defaultValue;
+        } else {
+          inputContainer.classList.add('hidden');
+        }
+
+        if (showCancel) {
+          cancelBtn.classList.remove('hidden');
+        } else {
+          cancelBtn.classList.add('hidden');
+        }
+
+        modal.classList.remove('hidden');
+
+        const cleanup = () => {
+          modal.classList.add('hidden');
+          okBtn.onclick = null;
+          cancelBtn.onclick = null;
+        };
+
+        okBtn.onclick = () => {
+          const val = showInput ? inputEl.value : true;
+          cleanup();
+          if (onOk) onOk(val);
+          resolve(val);
+        };
+
+        cancelBtn.onclick = () => {
+          cleanup();
+          resolve(false);
+        };
+      });
+    };
+
+    // Firebase Initialization & Sync Setup
+    async function initFirebase() {
+      if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+        console.warn("Firebase config is missing. Falling back to LocalStorage.");
+        document.getElementById('sync-status-text').innerText = "로컬 저장 모드";
+        loadDataFromLocal();
+        renderProfile();
+        renderItems();
+        return;
+      }
+
+      try {
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+          if (user) {
+            document.getElementById('sync-status-text').innerText = "실시간 클라우드 연동됨";
+            setupFirestoreListeners();
+          }
+        });
+      } catch (err) {
+        console.error("Firebase Auth initialization error:", err);
+        document.getElementById('sync-status-text').innerText = "로컬 모드 (연결 실패)";
+        loadDataFromLocal();
+        renderProfile();
+        renderItems();
+      }
+    }
+
+    // Firestore Listeners (RULE 1 & RULE 2 & RULE 3)
+    function setupFirestoreListeners() {
+      if (!currentUser || !db) return;
+
+      // 1. Profile Doc Listener
+      const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile_data', 'main');
+      onSnapshot(profileRef, (snapshot) => {
+        if (snapshot.exists()) {
+          profileData = snapshot.data();
+        } else {
+          setDoc(profileRef, profileData);
+        }
+        renderProfile();
+      }, (error) => {
+        console.error("Profile snapshot error:", error);
+      });
+
+      // 2. Categories Doc Listener
+      const categoryRef = doc(db, 'artifacts', appId, 'public', 'data', 'category_data', 'main');
+      onSnapshot(categoryRef, (snapshot) => {
+        if (snapshot.exists() && snapshot.data().list) {
+          categories = snapshot.data().list;
+        } else {
+          setDoc(categoryRef, { list: categories });
+        }
+        renderCategoryList();
+        populateTypeDropdown();
+      }, (error) => {
+        console.error("Categories snapshot error:", error);
+      });
+
+      // 3. Items Collection Listener
+      const itemsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'portfolio_items');
+      onSnapshot(itemsColRef, (snapshot) => {
+        const loadedItems = [];
+        snapshot.forEach((docSnap) => {
+          loadedItems.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        if (loadedItems.length === 0 && !snapshot.metadata.hasPendingWrites) {
+          // Seed initial items if completely empty
+          items.forEach(async (item) => {
+            const { id, ...data } = item;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', id), data);
+          });
+        } else {
+          items = loadedItems;
+          renderItems();
+        }
+      }, (error) => {
+        console.error("Items snapshot error:", error);
+      });
+    }
+
+    // Local Storage Fallback Helpers
+    function saveDataToLocal() {
       localStorage.setItem('bamboo_portfolio_profile', JSON.stringify(profileData));
       localStorage.setItem('bamboo_portfolio_categories', JSON.stringify(categories));
       localStorage.setItem('bamboo_portfolio_items', JSON.stringify(items));
     }
 
-    function loadData() {
+    function loadDataFromLocal() {
       const savedProfile = localStorage.getItem('bamboo_portfolio_profile');
       const savedCategories = localStorage.getItem('bamboo_portfolio_categories');
       const savedItems = localStorage.getItem('bamboo_portfolio_items');
@@ -330,47 +504,41 @@
       if (savedItems) items = JSON.parse(savedItems);
     }
 
-    // Initialize App
-    window.onload = function() {
-      loadData();
-      renderProfile();
-      renderItems();
-      lucide.createIcons();
-    };
-
     // Render Profile UI
-    function renderProfile() {
+    window.renderProfile = function() {
       document.getElementById('user-name-display').childNodes[0].nodeValue = profileData.name + " ";
       document.getElementById('user-bio-display').innerText = profileData.bio;
-    }
+    };
 
-    function openProfileModal() {
+    window.openProfileModal = function() {
       document.getElementById('edit-user-name').value = profileData.name;
       document.getElementById('edit-user-bio').value = profileData.bio;
       document.getElementById('profile-modal').classList.remove('hidden');
-    }
+    };
 
-    function closeProfileModal() {
+    window.closeProfileModal = function() {
       document.getElementById('profile-modal').classList.add('hidden');
-    }
+    };
 
-    function saveProfile() {
+    window.saveProfile = async function() {
       const nameVal = document.getElementById('edit-user-name').value.trim();
       const bioVal = document.getElementById('edit-user-bio').value.trim();
 
       if (nameVal) profileData.name = nameVal;
       profileData.bio = bioVal;
 
-      saveData();
-      renderProfile();
+      if (currentUser && db) {
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'profile_data', 'main'), profileData);
+      } else {
+        saveDataToLocal();
+        renderProfile();
+      }
       closeProfileModal();
-    }
+    };
 
     // View Mode Switcher
-    function setViewMode(mode) {
+    window.setViewMode = function(mode) {
       currentViewMode = mode;
-      
-      // Update Tab Styles
       document.querySelectorAll('.view-btn').forEach(btn => {
         if (btn.dataset.mode === mode) {
           btn.className = "view-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all bg-white text-slate-800 shadow-sm";
@@ -378,17 +546,15 @@
           btn.className = "view-btn flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all text-slate-600 hover:text-slate-900";
         }
       });
-
       renderItems();
-    }
+    };
 
     // Render Items Function
-    function renderItems() {
+    window.renderItems = function() {
       const container = document.getElementById('content-container');
       const sortOrder = document.getElementById('sort-order').value;
       const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
 
-      // Filter
       let filtered = items.filter(item => {
         const matchesTitle = item.title.toLowerCase().includes(searchQuery);
         const matchesDesc = item.desc.toLowerCase().includes(searchQuery);
@@ -397,7 +563,6 @@
         return matchesTitle || matchesDesc || matchesSubject || matchesType;
       });
 
-      // Sort
       filtered.sort((a, b) => {
         return sortOrder === 'newest' ? b.createdAt - a.createdAt : a.createdAt - b.createdAt;
       });
@@ -417,11 +582,9 @@
         return;
       }
 
-      // Render Strategy based on Mode
       if (currentViewMode === 'all') {
         container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">${filtered.map(createItemCardHTML).join('')}</div>`;
       } else {
-        // Grouping Strategy
         const groups = {};
         filtered.forEach(item => {
           let key = "기타";
@@ -453,23 +616,20 @@
       }
 
       lucide.createIcons();
-    }
+    };
 
-    // HTML Generator for Single Item Card
     function createItemCardHTML(item) {
       const isImage = item.fileData && item.fileData.startsWith('data:image');
       
       return `
         <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group relative overflow-hidden">
           <div class="space-y-3">
-            <!-- Badges -->
             <div class="flex flex-wrap items-center gap-1.5 text-xs font-medium">
               <span class="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md border border-slate-200">${item.period}</span>
               <span class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md border border-emerald-100 font-semibold">${item.subject || '자율'}</span>
               <span class="bg-teal-50 text-teal-800 px-2.5 py-1 rounded-md border border-teal-100">${item.type}</span>
             </div>
 
-            <!-- Title -->
             <h4 class="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug">
               ${item.linkUrl ? `
                 <a href="${escapeHtml(item.linkUrl)}" class="hover:underline flex items-center gap-1.5">
@@ -479,12 +639,10 @@
               ` : escapeHtml(item.title)}
             </h4>
 
-            <!-- Description -->
             <p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line line-clamp-4">
               ${escapeHtml(item.desc)}
             </p>
 
-            <!-- Target Link Button (if Link exists) -->
             ${item.linkUrl ? `
               <div class="pt-1">
                 <a href="${escapeHtml(item.linkUrl)}" class="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-lg shadow-sm transition-all">
@@ -494,7 +652,6 @@
               </div>
             ` : ''}
 
-            <!-- Attachment Preview if Any -->
             ${item.fileName ? `
               <div class="mt-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center gap-2">
                 <i data-lucide="${isImage ? 'image' : 'file-text'}" class="w-4 h-4 text-emerald-600 shrink-0"></i>
@@ -508,7 +665,6 @@
             ` : ''}
           </div>
 
-          <!-- Bottom Actions -->
           <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
             <span>${new Date(item.createdAt).toLocaleDateString()}</span>
             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -524,8 +680,8 @@
       `;
     }
 
-    // Modal Control & Item Operations
-    function openItemModal(editId = null) {
+    // Modal & Item Form Logic
+    window.openItemModal = function(editId = null) {
       populateTypeDropdown();
       const form = document.getElementById('item-form');
       form.reset();
@@ -555,19 +711,18 @@
       }
 
       document.getElementById('item-modal').classList.remove('hidden');
-    }
+    };
 
-    function closeItemModal() {
+    window.closeItemModal = function() {
       document.getElementById('item-modal').classList.add('hidden');
-    }
+    };
 
-    function populateTypeDropdown() {
+    window.populateTypeDropdown = function() {
       const select = document.getElementById('item-type');
       select.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
-    }
+    };
 
-    // File Handling Simulation
-    function handleFileSelected(event) {
+    window.handleFileSelected = function(event) {
       const file = event.target.files[0];
       if (!file) return;
 
@@ -578,7 +733,7 @@
         showFilePreviewUI(file.name);
       };
       reader.readAsDataURL(file);
-    }
+    };
 
     function showFilePreviewUI(fileName) {
       const container = document.getElementById('file-preview-container');
@@ -588,16 +743,16 @@
       container.classList.add('flex');
     }
 
-    function clearFileSelection() {
+    window.clearFileSelection = function() {
       document.getElementById('item-file-input').value = "";
       document.getElementById('item-file-name').value = "";
       document.getElementById('item-file-data').value = "";
       const container = document.getElementById('file-preview-container');
       container.classList.add('hidden');
       container.classList.remove('flex');
-    }
+    };
 
-    function handleItemFormSubmit(event) {
+    window.handleItemFormSubmit = async function(event) {
       event.preventDefault();
 
       const itemId = document.getElementById('item-id').value;
@@ -610,68 +765,72 @@
       const fileName = document.getElementById('item-file-name').value;
       const fileData = document.getElementById('item-file-data').value;
 
-      if (itemId) {
-        // Edit Existing Item
-        const index = items.findIndex(i => i.id === itemId);
-        if (index !== -1) {
-          items[index] = {
-            ...items[index],
-            title,
-            period,
-            subject,
-            type,
-            linkUrl,
-            desc,
-            fileName,
-            fileData
-          };
+      const payload = {
+        title,
+        period,
+        subject,
+        type,
+        linkUrl,
+        desc,
+        fileName,
+        fileData,
+        createdAt: itemId ? (items.find(i => i.id === itemId)?.createdAt || Date.now()) : Date.now()
+      };
+
+      if (currentUser && db) {
+        if (itemId) {
+          await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', itemId), payload);
+        } else {
+          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'portfolio_items'), payload);
         }
       } else {
-        // Add New Item
-        const newItem = {
-          id: 'item_' + Date.now(),
-          title,
-          period,
-          subject,
-          type,
-          linkUrl,
-          desc,
-          fileName,
-          fileData,
-          createdAt: Date.now()
-        };
-        items.unshift(newItem);
-      }
-
-      saveData();
-      renderItems();
-      closeItemModal();
-    }
-
-    function editItem(id) {
-      openItemModal(id);
-    }
-
-    function deleteItem(id) {
-      if (confirm('이 항목을 정말로 삭제하시겠습니까?')) {
-        items = items.filter(i => i.id !== id);
-        saveData();
+        if (itemId) {
+          const idx = items.findIndex(i => i.id === itemId);
+          if (idx !== -1) items[idx] = { id: itemId, ...payload };
+        } else {
+          items.unshift({ id: 'item_' + Date.now(), ...payload });
+        }
+        saveDataToLocal();
         renderItems();
       }
-    }
 
-    // Category Manager Modal Operations
-    function openCategoryModal() {
+      closeItemModal();
+    };
+
+    window.editItem = function(id) {
+      openItemModal(id);
+    };
+
+    window.deleteItem = async function(id) {
+      const confirmDelete = await showCustomModal({
+        title: "항목 삭제",
+        message: "이 항목을 정말로 삭제하시겠습니까?",
+        showCancel: true
+      });
+
+      if (confirmDelete) {
+        if (currentUser && db) {
+          await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', id));
+        } else {
+          items = items.filter(i => i.id !== id);
+          saveDataToLocal();
+          renderItems();
+        }
+      }
+    };
+
+    // Category Manager Operations
+    window.openCategoryModal = function() {
       renderCategoryList();
       document.getElementById('category-modal').classList.remove('hidden');
-    }
+    };
 
-    function closeCategoryModal() {
+    window.closeCategoryModal = function() {
       document.getElementById('category-modal').classList.add('hidden');
-      renderItems(); // Re-render main list in case categories changed
-    }
+      renderItems();
+    };
 
-    function renderCategoryList() {
+    window.renderCategoryList = function() {
       const container = document.getElementById('category-list-container');
       container.innerHTML = categories.map((cat, idx) => `
         <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
@@ -687,54 +846,87 @@
         </div>
       `).join('');
       lucide.createIcons();
-    }
+    };
 
-    function addNewCategory() {
+    window.addNewCategory = async function() {
       const input = document.getElementById('new-category-input');
       const val = input.value.trim();
       if (val && !categories.includes(val)) {
         categories.push(val);
         input.value = "";
-        saveData();
+        await syncCategories();
         renderCategoryList();
       }
-    }
+    };
 
-    function renameCategory(index) {
+    window.renameCategory = async function(index) {
       const oldVal = categories[index];
-      const newVal = prompt('종류(태그)의 새로운 이름을 입력하세요:', oldVal);
-      if (newVal && newVal.trim() !== "" && newVal !== oldVal) {
+      const newVal = await showCustomModal({
+        title: "종류(태그) 이름 변경",
+        message: "새로운 이름을 입력하세요:",
+        showInput: true,
+        defaultValue: oldVal,
+        showCancel: true
+      });
+
+      if (newVal && typeof newVal === 'string' && newVal.trim() !== "" && newVal !== oldVal) {
         const trimmed = newVal.trim();
         categories[index] = trimmed;
         
-        // Update existing items with old category name
         items.forEach(item => {
-          if (item.type === oldVal) item.type = trimmed;
+          if (item.type === oldVal) {
+            item.type = trimmed;
+            if (currentUser && db) {
+              updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', item.id), { type: trimmed });
+            }
+          }
         });
 
-        saveData();
+        await syncCategories();
         renderCategoryList();
       }
-    }
+    };
 
-    function removeCategory(index) {
+    window.removeCategory = async function(index) {
       if (categories.length <= 1) {
-        alert('최소 하나의 종류 태그는 존재해야 합니다.');
+        showCustomModal({
+          title: "알림",
+          message: "최소 하나의 종류 태그는 존재해야 합니다."
+        });
         return;
       }
+
       const targetCat = categories[index];
-      if (confirm(`'${targetCat}' 종류를 삭제하시겠습니까?`)) {
+      const confirmRemove = await showCustomModal({
+        title: "종류(태그) 삭제",
+        message: `'${targetCat}' 종류를 삭제하시겠습니까?`,
+        showCancel: true
+      });
+
+      if (confirmRemove) {
         categories.splice(index, 1);
-        // Fallback item categories to first remaining
         items.forEach(item => {
-          if (item.type === targetCat) item.type = categories[0];
+          if (item.type === targetCat) {
+            item.type = categories[0];
+            if (currentUser && db) {
+              updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', item.id), { type: categories[0] });
+            }
+          }
         });
-        saveData();
+
+        await syncCategories();
         renderCategoryList();
+      }
+    };
+
+    async function syncCategories() {
+      if (currentUser && db) {
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'category_data', 'main'), { list: categories });
+      } else {
+        saveDataToLocal();
       }
     }
 
-    // Helper: HTML Escape
     function escapeHtml(str) {
       if (!str) return '';
       return str.replace(/&/g, "&amp;")
@@ -743,6 +935,12 @@
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
     }
+
+    // App Start
+    window.onload = function() {
+      initFirebase();
+      lucide.createIcons();
+    };
   </script>
 </body>
 </html>
