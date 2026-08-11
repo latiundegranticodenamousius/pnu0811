@@ -3,695 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025년 월별 및 요일별 사망 교통사고 통계 분석 보고서</title>
+    <title>어휴... 죄송합니다!</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f6fe',
-                            100: '#e0edfe',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            700: '#1e40af',
-                            900: '#1e3a8a',
-                        },
-                        danger: {
-                            50: '#fef2f2',
-                            100: '#fee2e2',
-                            500: '#ef4444',
-                            600: '#dc2626',
-                            700: '#b91c1c',
-                        },
-                        warning: {
-                            50: '#fffbeb',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            font-family: 'Pretendard', sans-serif;
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 320px;
+        @keyframes sweat-drop {
+            0% { transform: translateY(-5px) scale(0.8); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(12px) scale(1.1); opacity: 0; }
+        }
+        .sweat {
+            animation: sweat-drop 1.5s infinite;
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+        .head-shake {
+            animation: shake 2s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+<body class="bg-amber-50 min-h-screen flex items-center justify-center p-4 text-slate-800">
 
-    <!-- Header Navigation -->
-    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="p-2.5 bg-red-600 rounded-xl text-white">
-                    <i class="fa-solid fa-car-burst text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight">2025 사망 교통사고 통계 분석</h1>
-                    <p class="text-xs text-slate-400">교통안전 정책 수립을 위한 월별·요일별 정밀 분석 보고서</p>
-                </div>
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl border-4 border-amber-200 p-8 text-center relative overflow-hidden">
+        
+        <!-- 장식용 배경 이모지 -->
+        <div class="absolute -top-6 -right-6 text-7xl opacity-10 select-none">🙇‍♂️</div>
+        <div class="absolute -bottom-6 -left-6 text-7xl opacity-10 select-none">💦</div>
+
+        <!-- 캐릭터 일러스트 (SVG/아이콘 조합) -->
+        <div class="relative inline-block mb-6 head-shake">
+            <div class="w-32 h-32 bg-amber-100 rounded-full flex items-center justify-center border-4 border-amber-300 mx-auto shadow-inner">
+                <!-- 땀 흘리며 사과하는 얼굴 이모지 -->
+                <i class="fa-solid fa-face-sad-sweat text-7xl text-amber-500"></i>
             </div>
-            <div class="flex items-center space-x-2 text-xs">
-                <span class="px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                    <i class="fa-regular fa-calendar-check mr-1.5 text-blue-400"></i>기준연도: 2025년
-                </span>
-                <span class="px-3 py-1.5 rounded-full bg-red-950/80 text-red-300 border border-red-800">
-                    <i class="fa-solid fa-triangle-exclamation mr-1.5 text-red-400"></i>사망사고 전수 분석
-                </span>
+            <!-- 애니메이션 땀방울 -->
+            <div class="sweat absolute top-2 right-1 text-blue-400 text-2xl">
+                <i class="fa-solid fa-droplet"></i>
             </div>
         </div>
-    </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <!-- 메인 헤드라인 -->
+        <h1 class="text-4xl font-extrabold text-amber-600 mb-2 tracking-tight">
+            어휴... 죄송합니다!
+        </h1>
+        
+        <p class="text-lg font-medium text-slate-600 mb-6">
+            원하시던 페이지를 찾지 못했거나<br>무언가 커다란 실수(실패)를 저질렀습니다.
+        </p>
 
-        <!-- Executive Summary Cards -->
-        <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-blue-600"></i> 2025년 사망 교통사고 총괄 현황
-                </h2>
-                <span class="text-xs text-slate-500">사망자 1명 이상 발생 사고 기준</span>
+        <!-- 변명 박스 -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left text-sm text-slate-600 space-y-2">
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold">•</span>
+                <span>개발자가 코딩하다 졸았을 수도 있습니다.</span>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <!-- Card 1 -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">전체 사고 건수</p>
-                            <h3 class="text-3xl font-black text-slate-900 mt-2">2,482 <span class="text-base font-normal text-slate-500">건</span></h3>
-                        </div>
-                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                            <i class="fa-solid fa-burst text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs text-slate-500">
-                        <i class="fa-solid fa-circle-info text-blue-500 mr-1.5"></i> 월평균 약 206.8건 발생
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">전체 사망자 수</p>
-                            <h3 class="text-3xl font-black text-red-600 mt-2">2,549 <span class="text-base font-normal text-slate-500">명</span></h3>
-                        </div>
-                        <div class="p-3 bg-red-50 text-red-600 rounded-xl">
-                            <i class="fa-solid fa-skull text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs text-slate-500">
-                        <span class="text-red-600 font-semibold mr-1">사고당 1.027명</span> 사망 발생
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">전체 부상자 수</p>
-                            <h3 class="text-3xl font-black text-amber-600 mt-2">1,145 <span class="text-base font-normal text-slate-500">명</span></h3>
-                        </div>
-                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                            <i class="fa-solid fa-user-ninja text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs text-slate-500">
-                        중상·경상·부상신고자 합산
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">하반기 사고 급증률</p>
-                            <h3 class="text-3xl font-black text-indigo-600 mt-2">+23.2 <span class="text-base font-normal text-slate-500">%</span></h3>
-                        </div>
-                        <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-                            <i class="fa-solid fa-chart-line-up text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center text-xs text-slate-500">
-                        <span class="text-indigo-600 font-semibold mr-1">상반기 1,112건</span> → 하반기 1,370건
-                    </div>
-                </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold">•</span>
+                <span>서버가 잠시 딴청을 피우는 중일지도 모릅니다.</span>
             </div>
-        </section>
-
-        <!-- Dynamic Visualizations Section 1: Monthly Trend & Half Comparison -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Monthly Chart (2 cols) -->
-            <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-regular fa-calendar-days text-blue-600"></i> 월별 교통사고 발생 및 인명피해 추이
-                        </h3>
-                        <p class="text-xs text-slate-500 mt-0.5">8월 사고 최고치(249건) 및 11월 부상자 최고치(185명) 교차 분석</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="inline-flex items-center text-xs text-slate-600">
-                            <span class="w-3 h-3 bg-blue-500 rounded-full inline-block mr-1"></span>사고건수
-                        </span>
-                        <span class="inline-flex items-center text-xs text-slate-600">
-                            <span class="w-3 h-3 bg-red-500 rounded-full inline-block mr-1"></span>사망자수
-                        </span>
-                        <span class="inline-flex items-center text-xs text-slate-600">
-                            <span class="w-3 h-3 bg-amber-400 rounded-full inline-block mr-1"></span>부상자수
-                        </span>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold">•</span>
+                <span>아무튼 진심으로 반성하고 있습니다... 🥺</span>
             </div>
-
-            <!-- Half Year Comparison & Key Highlight -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
-                        <i class="fa-solid fa-scale-balanced text-indigo-600"></i> 반기별 사고건수 비교
-                    </h3>
-                    <p class="text-xs text-slate-500 mb-4">하반기 활동량 증가 및 기상 변화 영향</p>
-                    
-                    <div class="chart-container" style="height:210px;">
-                        <canvas id="halfYearChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-200">
-                    <div class="flex items-start gap-3">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5"></i>
-                        <div class="text-xs text-amber-900 leading-relaxed">
-                            <span class="font-bold block mb-0.5 text-amber-950">11월 대형 사고 특이성</span>
-                            11월 사고건수는 240건으로 8월(249건)보다 적었으나, 부상자수는 <strong>185명</strong>으로 연중 최고를 기록하여 다수 인명피해 동반 대형사고 비중이 높았습니다.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 2: Day of Week Analysis -->
-        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Day Highlight Info (1 col) -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-week text-red-600"></i> 요일별 사망사고 패턴
-                    </h3>
-                    <p class="text-xs text-slate-500 mb-6">주초(월요일) 사고 위험 극대화 및 평일/주말격차</p>
-
-                    <div class="space-y-4">
-                        <div class="p-4 rounded-xl bg-red-50 border border-red-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs font-semibold text-red-600 block">최고 위험 요일</span>
-                                <span class="text-lg font-bold text-red-950">월요일</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xl font-black text-red-600">394건</span>
-                                <span class="text-xs text-slate-500 block">사망자 397명</span>
-                            </div>
-                        </div>
-
-                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs font-semibold text-emerald-600 block">최저 발생 요일</span>
-                                <span class="text-lg font-bold text-emerald-950">일요일</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-xl font-black text-emerald-600">275건</span>
-                                <span class="text-xs text-slate-500 block">사망자 291명</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>
-                        <strong>평일 vs 주말 분석:</strong><br>
-                        평일 중 최저치인 수요일(352건)조차 주말 최고치인 토요일(350건)보다 높아, 평일 물동량 및 업무 관련 통행이 사망 사고와 매우 밀접함을 보여줍니다.
-                    </div>
-                </div>
-
-                <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span>월요일 위험 지수</span>
-                    <span class="font-bold text-red-600">일요일 대비 +43.3% 사고 발생</span>
-                </div>
-            </div>
-
-            <!-- Day Chart (2 cols) -->
-            <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-column text-indigo-600"></i> 요일별 사고건수 및 부상자수 비교
-                        </h3>
-                        <p class="text-xs text-slate-500">월요일 최고점 기록 후 주말로 갈수록 감소하는 경향</p>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="dayChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3: Cross Analysis & Specific Risk Points -->
-        <section class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-6 lg:p-8 text-white shadow-xl">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="p-2.5 bg-red-500/20 text-red-400 rounded-xl border border-red-500/30">
-                    <i class="fa-solid fa-crosshairs text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold">월별-요일별 교차 데이터 고위험 집중 포인트</h3>
-                    <p class="text-xs text-slate-300">특정 월과 요일이 결합하여 사고 위험이 극대화되는 시점 분석</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/15">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-bold">
-                            평일 최고 위험 구간
-                        </span>
-                        <span class="text-2xl font-black text-amber-400">45건</span>
-                    </div>
-                    <h4 class="text-base font-bold text-white mb-2">9월 목요일 집중 사고</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        9월 중 목요일에 총 45건의 사망사고가 발생하여 해당 월 내 최고 위험 구간으로 포착되었습니다. 가을철 수송량 증가 및 주후반 피로 누적이 복합 작용한 것으로 추정됩니다.
-                    </p>
-                </div>
-
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-5 border border-white/15">
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="px-2.5 py-1 bg-red-500/20 text-red-300 border border-red-500/30 rounded-lg text-xs font-bold">
-                            주말 예외적 집중 구간
-                        </span>
-                        <span class="text-2xl font-black text-red-400">45건</span>
-                    </div>
-                    <h4 class="text-base font-bold text-white mb-2">11월 일요일 집중 사고</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        일반적으로 일요일은 연중 사고가 가장 적은 요일(전체 275건)이나, 11월 일요일은 45건이 집중되어 이례적으로 높은 사고 밀도를 나타냈습니다.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 4: Data Tables with Interactive Tabs -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-table text-blue-600"></i> 상세 통계 데이터 표
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">월별 및 요일별 수치 데이터 종합 검토</p>
-                </div>
-                <!-- Tab Controls -->
-                <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
-                    <button id="btnTabMonthly" onclick="switchTab('monthly')" class="px-4 py-2 rounded-lg bg-white text-slate-900 shadow-sm transition">
-                        월별 데이터
-                    </button>
-                    <button id="btnTabDaily" onclick="switchTab('daily')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">
-                        요일별 데이터
-                    </button>
-                </div>
-            </div>
-
-            <!-- Table 1: Monthly -->
-            <div id="tableMonthlyContainer" class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
-                            <th class="py-3.5 px-6 font-semibold">구분 (월)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">사고건수 (건)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">사망자수 (명)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">부상자수 (명)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">사고당 사망률</th>
-                            <th class="py-3.5 px-6 font-semibold text-center">비고 / 비중</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-700" id="monthlyTableBody">
-                        <!-- Dynamic JavaScript insertion -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Table 2: Daily (Hidden by default) -->
-            <div id="tableDailyContainer" class="overflow-x-auto hidden">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-200">
-                            <th class="py-3.5 px-6 font-semibold">구분 (요일)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">사고건수 (건)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">사망자수 (명)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">부상자수 (명)</th>
-                            <th class="py-3.5 px-6 font-semibold text-right">전체 대비 비중</th>
-                            <th class="py-3.5 px-6 font-semibold text-center">특이사항</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-slate-700" id="dailyTableBody">
-                        <!-- Dynamic JavaScript insertion -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Section 5: Policy Recommendations & Strategic Action Plans -->
-        <section class="space-y-4">
-            <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-bullhorn text-red-600"></i> 종합 결론 및 교통안전 정책 시사점
-                </h2>
-                <span class="text-xs text-slate-500">데이터 기반 3대 핵심 대응 전략</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Action 1 -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:border-red-300 transition group">
-                    <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl mb-4 group-hover:bg-red-600 group-hover:text-white transition">
-                        01
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">하반기 특별 교통안전 관리기간 설정</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        하반기 사고 발생 건수가 상반기 대비 <strong>23.2% 급증</strong>함에 따라, 7월부터 11월까지를 '특별 사고 예방 기간'으로 지정하고 야간 가속 단속 및 주요 위험 도로 순찰을 대폭 강화해야 합니다.
-                    </p>
-                </div>
-
-                <!-- Action 2 -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:border-blue-300 transition group">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition">
-                        02
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">월요일 및 고위험 요일 타깃 단속</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        주중 가장 사고가 빈번한 <strong>월요일(394건)</strong> 출근길 모니터링 및 9월 목요일, 11월 일요일 등 이례적 사고 집중 구간에 맞춤형 가시적 단속과 교통안전 캠페인을 집중 전개해야 합니다.
-                    </p>
-                </div>
-
-                <!-- Action 3 -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 hover:border-amber-300 transition group">
-                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition">
-                        03
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">대형사고 방지 및 피해 경감 정책</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        사고 건수 정점(8월)과 부상자수 정점(11월)이 일치하지 않는 특성을 감안하여, 발생 빈도 감소 대책과 더불어 <strong>전좌석 안전띠 착용 및 대형차량 속도제한 장치</strong> 점검 등 피해 경감책을 병행해야 합니다.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs space-y-2">
-            <p class="text-slate-300 font-semibold">2025년 사망 교통사고 통계 분석 결과 보고서</p>
-            <p>본 보고서는 제공된 사망 교통사고 데이터 세트를 바탕으로 산출된 통계 자료입니다.</p>
-            <p class="text-slate-500 pt-2">© 2026 Traffic Safety Data Analysis System. All rights reserved.</p>
         </div>
-    </footer>
 
-    <!-- JavaScript Data & Logic -->
+        <!-- 버튼 그룹 -->
+        <div class="space-y-3">
+            <button onclick="forgiveAction()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-heart"></i>
+                <span>너그럽게 용서해주기</span>
+            </button>
+
+            <button onclick="showApologyLetter()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-scroll"></i>
+                <span>반성문 작성하기</span>
+            </button>
+
+            <button onclick="history.back()" class="w-full bg-transparent hover:bg-amber-100/50 text-slate-500 font-medium py-2 px-4 rounded-xl text-sm transition-all">
+                <i class="fa-solid fa-arrow-left mr-1"></i> 이전 페이지로 도망가기
+            </button>
+        </div>
+
+        <!-- 푸터 메시지 -->
+        <div class="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400">
+            Error Code: <span class="font-mono text-amber-600 font-bold">404_OH_NO_SORRY</span>
+        </div>
+    </div>
+
+    <!-- 모달 창 (알림/반성문) -->
+    <div id="modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modal-content">
+            <div id="modal-body"></div>
+            <button onclick="closeModal()" class="mt-5 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-6 rounded-xl w-full">
+                확인
+            </button>
+        </div>
+    </div>
+
     <script>
-        // Data Definitions
-        const rawMonthlyData = [
-            { month: '1월', accidents: 182, deaths: 185, injuries: 87 },
-            { month: '2월', accidents: 157, deaths: 158, injuries: 69 },
-            { month: '3월', accidents: 194, deaths: 203, injuries: 87 },
-            { month: '4월', accidents: 177, deaths: 177, injuries: 69 },
-            { month: '5월', accidents: 196, deaths: 199, injuries: 71 },
-            { month: '6월', accidents: 206, deaths: 211, injuries: 99 },
-            { month: '7월', accidents: 228, deaths: 237, injuries: 81 },
-            { month: '8월', accidents: 249, deaths: 259, injuries: 143 },
-            { month: '9월', accidents: 226, deaths: 233, injuries: 87 },
-            { month: '10월', accidents: 238, deaths: 242, injuries: 92 },
-            { month: '11월', accidents: 240, deaths: 249, injuries: 185 },
-            { month: '12월', accidents: 189, deaths: 196, injuries: 75 }
-        ];
+        function openModal(htmlContent) {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalBody = document.getElementById('modal-body');
 
-        const rawDailyData = [
-            { day: '일요일', accidents: 275, deaths: 291, injuries: 156 },
-            { day: '월요일', accidents: 394, deaths: 397, injuries: 166 },
-            { day: '화요일', accidents: 374, deaths: 382, injuries: 200 },
-            { day: '수요일', accidents: 352, deaths: 362, injuries: 144 },
-            { day: '목요일', accidents: 359, deaths: 376, injuries: 143 },
-            { day: '금요일', accidents: 378, deaths: 383, injuries: 171 },
-            { day: '토요일', accidents: 350, deaths: 358, injuries: 165 }
-        ];
-
-        // Chart Initialization
-        document.addEventListener('DOMContentLoaded', () => {
-            initMonthlyChart();
-            initHalfYearChart();
-            initDayChart();
-            renderTables();
-        });
-
-        // 1. Monthly Trend Chart
-        function initMonthlyChart() {
-            const ctx = document.getElementById('monthlyChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: rawMonthlyData.map(d => d.month),
-                    datasets: [
-                        {
-                            label: '사고건수 (건)',
-                            data: rawMonthlyData.map(d => d.accidents),
-                            backgroundColor: 'rgba(37, 99, 235, 0.75)',
-                            borderColor: '#2563eb',
-                            borderWidth: 1,
-                            borderRadius: 6,
-                            order: 2
-                        },
-                        {
-                            label: '사망자수 (명)',
-                            data: rawMonthlyData.map(d => d.deaths),
-                            type: 'line',
-                            borderColor: '#ef4444',
-                            backgroundColor: '#ef4444',
-                            borderWidth: 2.5,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            tension: 0.2,
-                            order: 1
-                        },
-                        {
-                            label: '부상자수 (명)',
-                            data: rawMonthlyData.map(d => d.injuries),
-                            type: 'line',
-                            borderColor: '#f59e0b',
-                            backgroundColor: '#f59e0b',
-                            borderWidth: 2,
-                            borderDash: [4, 4],
-                            pointRadius: 3,
-                            tension: 0.2,
-                            order: 0
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            padding: 12,
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleFont: { size: 13, weight: 'bold' },
-                            bodyFont: { size: 12 }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(226, 232, 240, 0.6)' },
-                            ticks: { font: { size: 11 } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 11 } }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 2. Half Year Comparison Chart
-        function initHalfYearChart() {
-            const ctx = document.getElementById('halfYearChart').getContext('2d');
+            modalBody.innerHTML = htmlContent;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             
-            const h1Sum = rawMonthlyData.slice(0, 6).reduce((acc, curr) => acc + curr.accidents, 0);
-            const h2Sum = rawMonthlyData.slice(6, 12).reduce((acc, curr) => acc + curr.accidents, 0);
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['상반기 (1~6월)', '하반기 (7~12월)'],
-                    datasets: [{
-                        data: [h1Sum, h2Sum],
-                        backgroundColor: ['#60a5fa', '#312e81'],
-                        borderWidth: 3,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { font: { size: 12, weight: '600' }, padding: 15 }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    const percentage = ((value / (h1Sum + h2Sum)) * 100).toFixed(1);
-                                    return ` 사고건수: ${value}건 (${percentage}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
 
-        // 3. Day of Week Chart
-        function initDayChart() {
-            const ctx = document.getElementById('dayChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: rawDailyData.map(d => d.day),
-                    datasets: [
-                        {
-                            label: '사고건수 (건)',
-                            data: rawDailyData.map(d => d.accidents),
-                            backgroundColor: rawDailyData.map(d => d.day === '월요일' ? 'rgba(220, 38, 38, 0.85)' : 'rgba(79, 70, 229, 0.75)'),
-                            borderRadius: 6
-                        },
-                        {
-                            label: '부상자수 (명)',
-                            data: rawDailyData.map(d => d.injuries),
-                            backgroundColor: 'rgba(245, 158, 11, 0.75)',
-                            borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top', align: 'end', labels: { boxWidth: 12, font: { size: 12 } } },
-                        tooltip: { padding: 12 }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(226, 232, 240, 0.6)' }
-                        },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
 
-        // Render Data Tables
-        function renderTables() {
-            // Monthly Table
-            const monthlyBody = document.getElementById('monthlyTableBody');
-            let monthlyHtml = '';
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
             
-            rawMonthlyData.forEach(d => {
-                const deathRate = (d.deaths / d.accidents).toFixed(3);
-                let badge = '';
-                if(d.month === '8월') {
-                    badge = '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-700">사고/사망 최다</span>';
-                } else if(d.month === '11월') {
-                    badge = '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">부상자 최다 (185명)</span>';
-                } else if(d.month === '2월') {
-                    badge = '<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-600">연중 최저</span>';
-                }
-
-                monthlyHtml += `
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3 px-6 font-bold text-slate-900">${d.month}</td>
-                        <td class="py-3 px-6 text-right font-medium">${d.accidents.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right font-semibold text-red-600">${d.deaths.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right font-medium text-amber-600">${d.injuries.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right text-xs text-slate-500">${deathRate}명/건</td>
-                        <td class="py-3 px-6 text-center">${badge}</td>
-                    </tr>
-                `;
-            });
-            monthlyBody.innerHTML = monthlyHtml;
-
-            // Daily Table
-            const dailyBody = document.getElementById('dailyTableBody');
-            let dailyHtml = '';
-            const totalAccidents = 2482;
-
-            rawDailyData.forEach(d => {
-                const share = ((d.accidents / totalAccidents) * 100).toFixed(1);
-                let note = '-';
-                if(d.day === '월요일') {
-                    note = '<span class="text-red-600 font-bold">최고 위험 요일 (394건)</span>';
-                } else if(d.day === '일요일') {
-                    note = '<span class="text-emerald-600 font-semibold">최저 사고 요일 (275건)</span>';
-                } else if(d.day === '화요일') {
-                    note = '부상자 최다 요일 (200명)';
-                }
-
-                dailyHtml += `
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3 px-6 font-bold text-slate-900">${d.day}</td>
-                        <td class="py-3 px-6 text-right font-medium">${d.accidents.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right font-semibold text-red-600">${d.deaths.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right font-medium text-amber-600">${d.injuries.toLocaleString()}</td>
-                        <td class="py-3 px-6 text-right font-medium text-slate-600">${share}%</td>
-                        <td class="py-3 px-6 text-center text-xs">${note}</td>
-                    </tr>
-                `;
-            });
-            dailyBody.innerHTML = dailyHtml;
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 150);
         }
 
-        // Tab Switching Functionality
-        function switchTab(tabName) {
-            const btnMonthly = document.getElementById('btnTabMonthly');
-            const btnDaily = document.getElementById('btnTabDaily');
-            const tableMonthly = document.getElementById('tableMonthlyContainer');
-            const tableDaily = document.getElementById('tableDailyContainer');
+        function forgiveAction() {
+            openModal(`
+                <div class="text-5xl mb-3">🎉</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">대인배이시군요!</h3>
+                <p class="text-slate-600 text-sm">넓은 마음으로 용서해 주셔서 감사합니다.<br>앞으로 더 열심히 하는 시스템이 되겠습니다!</p>
+            `);
+        }
 
-            if(tabName === 'monthly') {
-                btnMonthly.className = "px-4 py-2 rounded-lg bg-white text-slate-900 shadow-sm transition";
-                btnDaily.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition";
-                tableMonthly.classList.remove('hidden');
-                tableDaily.classList.add('hidden');
-            } else {
-                btnDaily.className = "px-4 py-2 rounded-lg bg-white text-slate-900 shadow-sm transition";
-                btnMonthly.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition";
-                tableDaily.classList.remove('hidden');
-                tableMonthly.classList.add('hidden');
-            }
+        function showApologyLetter() {
+            openModal(`
+                <div class="text-4xl mb-2">✍️</div>
+                <h3 class="text-lg font-bold text-slate-800 mb-3">반성문</h3>
+                <div class="text-left text-xs text-slate-600 bg-amber-50 p-3 rounded-lg border border-amber-200 leading-relaxed space-y-2">
+                    <p><strong>제목: 진심으로 사과드립니다.</strong></p>
+                    <p>본 시스템은 사용자의 요청을 올바르게 처리하지 못하고 "어휴 죄송" 상황을 발생시켰음을 깊이 반성합니다.</p>
+                    <p>다시는 딴짓을 하지 않고, 빠른 데이터 전송과 정확한 버그 수정을 약속드립니다.</p>
+                    <p class="text-right text-slate-400 mt-2">- 올림 -</p>
+                </div>
+            `);
         }
     </script>
 </body>
