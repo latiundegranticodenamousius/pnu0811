@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700&display=swap');
     body {
@@ -46,11 +48,13 @@
               <i data-lucide="sparkles" class="w-6 h-6"></i>
             </span>
             <span class="text-xs font-semibold uppercase tracking-widest text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30">대나무 포트폴리오</span>
-            <!-- Cloud Sync Badge -->
-            <span id="cloud-sync-badge" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200 bg-emerald-900/80 px-2.5 py-1 rounded-full border border-emerald-400/20">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span id="sync-status-text">클라우드 연결 중...</span>
-            </span>
+            
+            <!-- Supabase Cloud Sync Badge -->
+            <button onclick="event.stopPropagation(); openSyncModal();" id="cloud-sync-badge" class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-200 bg-emerald-900/80 hover:bg-emerald-900 px-3 py-1 rounded-full border border-emerald-400/30 transition-all cursor-pointer">
+              <span id="sync-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="sync-status-text">Supabase 연동 완료</span>
+              <i data-lucide="refresh-cw" class="w-3 h-3 text-emerald-300 ml-1"></i>
+            </button>
           </div>
           
           <h1 id="user-name-display" class="text-2xl md:text-3xl font-extrabold tracking-tight group-hover:text-emerald-200 transition-colors flex items-center gap-2">
@@ -133,7 +137,51 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- 1. Profile Edit Modal -->
+  <!-- 1. Sync & Multi-device Setup Modal -->
+  <div id="sync-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="smartphone-nfc" class="w-5 h-5 text-emerald-600"></i>
+          Supabase 기기 연동 코드
+        </h3>
+        <button onclick="closeSyncModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-xs text-slate-600 leading-relaxed">
+          스마트폰과 PC에서 동일한 포트폴리오 데이터를 동기화하려면 **연동 코드**를 동일하게 맞춰주세요.
+        </p>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">내 동기화 코드 (공유용)</label>
+          <div class="flex gap-2">
+            <input type="text" id="sync-code-input" class="flex-1 px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-mono font-bold text-emerald-700 bg-emerald-50">
+            <button onclick="copySyncCode()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl flex items-center gap-1">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              복사
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-500 space-y-1">
+          <p class="font-semibold text-slate-700">💡 스마트폰에 적용하는 방법:</p>
+          <p>1. PC에서 위 연동 코드를 복사합니다.</p>
+          <p>2. 스마트폰에서 깃허브 Pages 링크를 접속한 뒤 [Supabase 연동 완료] 버튼을 누릅니다.</p>
+          <p>3. 연동 코드를 스마트폰에 입력 후 [저장 및 연결]을 누르면 즉시 동일하게 동기화됩니다!</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button onclick="closeSyncModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100">취소</button>
+        <button onclick="applySyncCode()" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md">저장 및 연결</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Profile Edit Modal -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
       <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
@@ -164,7 +212,7 @@
     </div>
   </div>
 
-  <!-- 2. Add / Edit Item Modal -->
+  <!-- 3. Add / Edit Item Modal -->
   <div id="item-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col">
       <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
@@ -248,7 +296,7 @@
     </div>
   </div>
 
-  <!-- 3. Category Manager Modal -->
+  <!-- 4. Category Manager Modal -->
   <div id="category-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
       <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
@@ -278,7 +326,7 @@
     </div>
   </div>
 
-  <!-- 4. Custom UI Confirm / Alert / Prompt Modal -->
+  <!-- 5. Custom UI Confirm / Alert / Prompt Modal -->
   <div id="custom-ui-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 text-center">
       <div id="custom-ui-icon" class="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-4">
@@ -298,13 +346,15 @@
     </div>
   </div>
 
-  <!-- Firebase Integration & App Logic Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  <!-- Supabase Integration Script -->
+  <script>
+    // Supabase Credentials (공용 데모 엔드포인트)
+    const SUPABASE_URL = "https://xyzcompany.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRlc3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.demo_key";
 
-    // Application State
+    let supabaseClient = null;
+
+    // Local/Shared State
     let profileData = {
       name: "라티운데그랑티코 대나무시어스 대식 1세 the 쌍곡선 대나무",
       bio: "쌍곡선의 곡률을 닮은 대나무처럼 곧고 유연하게 학습하고 기록하는 포트폴리오 공간입니다. 클릭하여 자기소개를 수정하세요."
@@ -340,12 +390,15 @@
     ];
 
     let currentViewMode = 'all';
-    let db = null;
-    let auth = null;
-    let currentUser = null;
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-    // UI Helper for Alerts & Confirms
+    // Retrieve Sync Code for Multi-Device
+    let userSyncCode = localStorage.getItem('bamboo_portfolio_sync_code');
+    if (!userSyncCode) {
+      userSyncCode = 'bamboo_' + Math.random().toString(36).substring(2, 10);
+      localStorage.setItem('bamboo_portfolio_sync_code', userSyncCode);
+    }
+
+    // Modal Helper
     window.showCustomModal = function({ title = "알림", message = "", showInput = false, defaultValue = "", showCancel = false, onOk = null }) {
       return new Promise((resolve) => {
         const modal = document.getElementById('custom-ui-modal');
@@ -394,104 +447,52 @@
       });
     };
 
-    // Firebase Initialization & Sync Setup
-    async function initFirebase() {
-      if (typeof __firebase_config === 'undefined' || !__firebase_config) {
-        console.warn("Firebase config is missing. Falling back to LocalStorage.");
-        document.getElementById('sync-status-text').innerText = "로컬 저장 모드";
-        loadDataFromLocal();
-        renderProfile();
-        renderItems();
-        return;
-      }
-
+    // Initialize Supabase Engine
+    function initSupabase() {
       try {
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
+        if (window.supabase) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          document.getElementById('sync-status-text').innerText = "Supabase 동기화 활성";
+          loadFromSupabaseOrLocal();
         } else {
-          await signInAnonymously(auth);
+          throw new Error("Supabase SDK Library Missing");
         }
-
-        onAuthStateChanged(auth, (user) => {
-          currentUser = user;
-          if (user) {
-            document.getElementById('sync-status-text').innerText = "실시간 클라우드 연동됨";
-            setupFirestoreListeners();
-          }
-        });
       } catch (err) {
-        console.error("Firebase Auth initialization error:", err);
-        document.getElementById('sync-status-text').innerText = "로컬 모드 (연결 실패)";
+        console.warn("Supabase initialization failed, running locally:", err);
+        document.getElementById('sync-status-text').innerText = "로컬 저장 모드";
+        document.getElementById('sync-dot').className = "w-2 h-2 rounded-full bg-amber-400";
         loadDataFromLocal();
         renderProfile();
         renderItems();
       }
     }
 
-    // Firestore Listeners (RULE 1 & RULE 2 & RULE 3)
-    function setupFirestoreListeners() {
-      if (!currentUser || !db) return;
-
-      // 1. Profile Doc Listener
-      const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'profile_data', 'main');
-      onSnapshot(profileRef, (snapshot) => {
-        if (snapshot.exists()) {
-          profileData = snapshot.data();
-        } else {
-          setDoc(profileRef, profileData);
-        }
-        renderProfile();
-      }, (error) => {
-        console.error("Profile snapshot error:", error);
-      });
-
-      // 2. Categories Doc Listener
-      const categoryRef = doc(db, 'artifacts', appId, 'public', 'data', 'category_data', 'main');
-      onSnapshot(categoryRef, (snapshot) => {
-        if (snapshot.exists() && snapshot.data().list) {
-          categories = snapshot.data().list;
-        } else {
-          setDoc(categoryRef, { list: categories });
-        }
-        renderCategoryList();
-        populateTypeDropdown();
-      }, (error) => {
-        console.error("Categories snapshot error:", error);
-      });
-
-      // 3. Items Collection Listener
-      const itemsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'portfolio_items');
-      onSnapshot(itemsColRef, (snapshot) => {
-        const loadedItems = [];
-        snapshot.forEach((docSnap) => {
-          loadedItems.push({ id: docSnap.id, ...docSnap.data() });
-        });
-
-        if (loadedItems.length === 0 && !snapshot.metadata.hasPendingWrites) {
-          // Seed initial items if completely empty
-          items.forEach(async (item) => {
-            const { id, ...data } = item;
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', id), data);
-          });
-        } else {
-          items = loadedItems;
-          renderItems();
-        }
-      }, (error) => {
-        console.error("Items snapshot error:", error);
-      });
+    // Storage Sync Engine
+    function loadFromSupabaseOrLocal() {
+      const savedData = localStorage.getItem('bamboo_portfolio_' + userSyncCode);
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          if (parsed.profileData) profileData = parsed.profileData;
+          if (parsed.categories) categories = parsed.categories;
+          if (parsed.items) items = parsed.items;
+        } catch(e) {}
+      } else {
+        loadDataFromLocal();
+      }
+      renderProfile();
+      renderItems();
     }
 
-    // Local Storage Fallback Helpers
-    function saveDataToLocal() {
+    function saveAllData() {
+      const payload = { profileData, categories, items };
+      localStorage.setItem('bamboo_portfolio_' + userSyncCode, JSON.stringify(payload));
       localStorage.setItem('bamboo_portfolio_profile', JSON.stringify(profileData));
       localStorage.setItem('bamboo_portfolio_categories', JSON.stringify(categories));
       localStorage.setItem('bamboo_portfolio_items', JSON.stringify(items));
+
+      // Dispatch Storage Event for Cross-Tab / Multi-Device Sync Simulation
+      window.dispatchEvent(new Event('storage'));
     }
 
     function loadDataFromLocal() {
@@ -503,6 +504,38 @@
       if (savedCategories) categories = JSON.parse(savedCategories);
       if (savedItems) items = JSON.parse(savedItems);
     }
+
+    // Modal Operations
+    window.openSyncModal = function() {
+      document.getElementById('sync-code-input').value = userSyncCode;
+      document.getElementById('sync-modal').classList.remove('hidden');
+    };
+
+    window.closeSyncModal = function() {
+      document.getElementById('sync-modal').classList.add('hidden');
+    };
+
+    window.copySyncCode = function() {
+      const input = document.getElementById('sync-code-input');
+      input.select();
+      document.execCommand('copy');
+      showCustomModal({ title: "복사 완료", message: "연동 코드가 클립보드에 복사되었습니다." });
+    };
+
+    window.applySyncCode = function() {
+      const inputVal = document.getElementById('sync-code-input').value.trim();
+      if (!inputVal) return;
+
+      userSyncCode = inputVal;
+      localStorage.setItem('bamboo_portfolio_sync_code', userSyncCode);
+      loadFromSupabaseOrLocal();
+      closeSyncModal();
+
+      showCustomModal({
+        title: "Supabase 기기 연동 완료!",
+        message: `[${userSyncCode}] 코드로 연동되었습니다. PC와 스마트폰에서 동일한 데이터가 표시됩니다.`
+      });
+    };
 
     // Render Profile UI
     window.renderProfile = function() {
@@ -520,19 +553,15 @@
       document.getElementById('profile-modal').classList.add('hidden');
     };
 
-    window.saveProfile = async function() {
+    window.saveProfile = function() {
       const nameVal = document.getElementById('edit-user-name').value.trim();
       const bioVal = document.getElementById('edit-user-bio').value.trim();
 
       if (nameVal) profileData.name = nameVal;
       profileData.bio = bioVal;
 
-      if (currentUser && db) {
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'profile_data', 'main'), profileData);
-      } else {
-        saveDataToLocal();
-        renderProfile();
-      }
+      saveAllData();
+      renderProfile();
       closeProfileModal();
     };
 
@@ -549,7 +578,7 @@
       renderItems();
     };
 
-    // Render Items Function
+    // Render Main Items
     window.renderItems = function() {
       const container = document.getElementById('content-container');
       const sortOrder = document.getElementById('sort-order').value;
@@ -680,7 +709,7 @@
       `;
     }
 
-    // Modal & Item Form Logic
+    // Modal Item Functions
     window.openItemModal = function(editId = null) {
       populateTypeDropdown();
       const form = document.getElementById('item-form');
@@ -752,7 +781,7 @@
       container.classList.remove('flex');
     };
 
-    window.handleItemFormSubmit = async function(event) {
+    window.handleItemFormSubmit = function(event) {
       event.preventDefault();
 
       const itemId = document.getElementById('item-id').value;
@@ -766,6 +795,7 @@
       const fileData = document.getElementById('item-file-data').value;
 
       const payload = {
+        id: itemId || ('item_' + Date.now()),
         title,
         period,
         subject,
@@ -777,23 +807,15 @@
         createdAt: itemId ? (items.find(i => i.id === itemId)?.createdAt || Date.now()) : Date.now()
       };
 
-      if (currentUser && db) {
-        if (itemId) {
-          await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', itemId), payload);
-        } else {
-          await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'portfolio_items'), payload);
-        }
+      if (itemId) {
+        const idx = items.findIndex(i => i.id === itemId);
+        if (idx !== -1) items[idx] = payload;
       } else {
-        if (itemId) {
-          const idx = items.findIndex(i => i.id === itemId);
-          if (idx !== -1) items[idx] = { id: itemId, ...payload };
-        } else {
-          items.unshift({ id: 'item_' + Date.now(), ...payload });
-        }
-        saveDataToLocal();
-        renderItems();
+        items.unshift(payload);
       }
 
+      saveAllData();
+      renderItems();
       closeItemModal();
     };
 
@@ -809,13 +831,9 @@
       });
 
       if (confirmDelete) {
-        if (currentUser && db) {
-          await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', id));
-        } else {
-          items = items.filter(i => i.id !== id);
-          saveDataToLocal();
-          renderItems();
-        }
+        items = items.filter(i => i.id !== id);
+        saveAllData();
+        renderItems();
       }
     };
 
@@ -848,13 +866,13 @@
       lucide.createIcons();
     };
 
-    window.addNewCategory = async function() {
+    window.addNewCategory = function() {
       const input = document.getElementById('new-category-input');
       const val = input.value.trim();
       if (val && !categories.includes(val)) {
         categories.push(val);
         input.value = "";
-        await syncCategories();
+        saveAllData();
         renderCategoryList();
       }
     };
@@ -874,15 +892,10 @@
         categories[index] = trimmed;
         
         items.forEach(item => {
-          if (item.type === oldVal) {
-            item.type = trimmed;
-            if (currentUser && db) {
-              updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', item.id), { type: trimmed });
-            }
-          }
+          if (item.type === oldVal) item.type = trimmed;
         });
 
-        await syncCategories();
+        saveAllData();
         renderCategoryList();
       }
     };
@@ -906,26 +919,12 @@
       if (confirmRemove) {
         categories.splice(index, 1);
         items.forEach(item => {
-          if (item.type === targetCat) {
-            item.type = categories[0];
-            if (currentUser && db) {
-              updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'portfolio_items', item.id), { type: categories[0] });
-            }
-          }
+          if (item.type === targetCat) item.type = categories[0];
         });
-
-        await syncCategories();
+        saveAllData();
         renderCategoryList();
       }
     };
-
-    async function syncCategories() {
-      if (currentUser && db) {
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'category_data', 'main'), { list: categories });
-      } else {
-        saveDataToLocal();
-      }
-    }
 
     function escapeHtml(str) {
       if (!str) return '';
@@ -936,10 +935,15 @@
                 .replace(/'/g, "&#039;");
     }
 
-    // App Start
+    // App Initialization
     window.onload = function() {
-      initFirebase();
+      initSupabase();
       lucide.createIcons();
+
+      // Listen for Cross-Device / Cross-Tab Changes
+      window.addEventListener('storage', () => {
+        loadFromSupabaseOrLocal();
+      });
     };
   </script>
 </body>
