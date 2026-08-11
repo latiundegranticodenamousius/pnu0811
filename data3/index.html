@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025년 교통사고 사망 현황 및 위험 요인 분석 보고서</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        danger: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                        },
+                        warning: {
+                            50: '#fffbe8',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="../index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2.5 rounded-lg border border-slate-700 transition flex items-center justify-center text-sm" title="홈으로 이동">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+                <div class="bg-red-600 p-2 rounded-lg text-white">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">2025 교통안전 분석 보고서</h1>
+                    <p class="text-xs text-slate-400">교통사고 사망 현황 및 위험 요인 데이터 분석</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <a href="../index.html" class="inline-flex items-center px-3 py-1.5 text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white rounded-md transition">
+                    <i class="fa-solid fa-house mr-1.5"></i> 홈으로
+                </a>
+                <span class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30">
+                    <span class="w-2 h-2 rounded-full bg-red-500 mr-1.5 animate-pulse"></span>
+                    고위험 기조 지속
+                </span>
+                <button onclick="window.print()" class="hidden md:inline-flex items-center px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md border border-slate-700 transition">
+                    <i class="fa-solid fa-print mr-1.5"></i> 보고서 인쇄
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Banner & Alert Header -->
+        <section class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute right-0 top-0 -mt-10 -mr-10 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-3xl">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-medium mb-4">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>종합 분석 데이터 요약</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+                    사고당 치사율 극심, <span class="text-red-400 font-black">14시~16시 차대차 충돌</span> 집중 예방 시급
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                    2025년 교통사고 통계 분석 결과, 전체 사고 건수를 초과하는 사망자 수가 발생하여 사고 1건당 사망률(1.03명)이 매우 높게 형성되었습니다. 특히 주간 14시~16시 시간대와 차대차 사고의 교차 위험도가 극도에 달하고 있습니다.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="#summary-section" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-semibold transition flex items-center">
+                        <i class="fa-solid fa-list-check mr-2"></i> 현황 요약 보기
+                    </a>
+                    <a href="#policy-section" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-sm font-semibold transition flex items-center">
+                        <i class="fa-solid fa-lightbulb text-yellow-400 mr-2"></i> 3대 전략적 제언
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Cards Grid -->
+        <section id="summary-section" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- KPI 1 -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-between text-slate-500 mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider">전체 사고 건수</span>
+                    <div class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                        <i class="fa-solid fa-car-crash"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-slate-900">2,482</span>
+                    <span class="text-sm font-semibold text-slate-500">건</span>
+                </div>
+                <div class="mt-3 text-xs text-slate-500 flex items-center">
+                    <span class="text-slate-600 font-medium">연중 누적 총 집계</span>
+                </div>
+            </div>
+
+            <!-- KPI 2 -->
+            <div class="bg-white p-6 rounded-2xl border border-red-200 shadow-sm hover:shadow-md transition relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-2 h-full bg-red-500"></div>
+                <div class="flex items-center justify-between text-slate-500 mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-red-600">전체 사망자 수</span>
+                    <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+                        <i class="fa-solid fa-skull-crossbones"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-red-600">2,549</span>
+                    <span class="text-sm font-semibold text-red-500">명</span>
+                </div>
+                <div class="mt-3 text-xs text-red-600 font-medium flex items-center">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> 사고 1건당 사망 1.03명 (치명적)
+                </div>
+            </div>
+
+            <!-- KPI 3 -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-between text-slate-500 mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider">전체 부상자 수</span>
+                    <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-slate-900">1,145</span>
+                    <span class="text-sm font-semibold text-slate-500">명</span>
+                </div>
+                <div class="mt-3 text-xs text-slate-500 flex items-center">
+                    <span>사망자 대비 <strong class="text-slate-800">45% 수준</strong> (생존율 극저)</span>
+                </div>
+            </div>
+
+            <!-- KPI 4 -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-200 shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-between text-amber-800 mb-3">
+                    <span class="text-xs font-bold uppercase tracking-wider">집중 위험 시간대</span>
+                    <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+                <div class="flex items-baseline space-x-2">
+                    <span class="text-3xl font-black text-amber-900">14:00~16:00</span>
+                </div>
+                <div class="mt-3 text-xs text-amber-800 font-medium">
+                    일 사망자의 <strong class="text-amber-950 font-bold">10.6% (271명)</strong> 집중 발생
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Data Visualizations Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Chart 1: Accident Types Breakdown -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">사고 유형별 사망자 현황</h3>
+                            <p class="text-xs text-slate-500">차대차 사고가 전체 사망의 44%를 차지하여 핵심 동인으로 작용</p>
+                        </div>
+                        <span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-xs font-semibold">대분류 분석</span>
+                    </div>
+                    <div class="h-64 sm:h-72 relative">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="p-2 bg-blue-50 rounded-lg">
+                        <span class="block text-blue-600 font-medium mb-1">차대차</span>
+                        <strong class="text-sm font-bold text-slate-900">1,121명 (44%)</strong>
+                    </div>
+                    <div class="p-2 bg-emerald-50 rounded-lg">
+                        <span class="block text-emerald-600 font-medium mb-1">차대사람</span>
+                        <strong class="text-sm font-bold text-slate-900">899명 (35%)</strong>
+                    </div>
+                    <div class="p-2 bg-purple-50 rounded-lg">
+                        <span class="block text-purple-600 font-medium mb-1">차량단독</span>
+                        <strong class="text-sm font-bold text-slate-900">527명 (21%)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart 2: Vehicle-to-Vehicle Breakdown -->
+            <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">차대차 세부 유형 분석</h3>
+                            <p class="text-xs text-slate-500">총 1,121명 중 충돌 및 추돌 사고 비중</p>
+                        </div>
+                        <span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-semibold">고위험 유형</span>
+                    </div>
+                    <div class="h-64 sm:h-72 relative">
+                        <canvas id="subTypeChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs">
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span class="flex items-center"><i class="fa-solid fa-circle text-red-500 text-[8px] mr-2"></i> 충돌 (정면/측면)</span>
+                        <span class="font-bold text-slate-900">512명 (45.7%)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span class="flex items-center"><i class="fa-solid fa-circle text-amber-500 text-[8px] mr-2"></i> 추돌 (후방 충돌)</span>
+                        <span class="font-bold text-slate-900">326명 (29.1%)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span class="flex items-center"><i class="fa-solid fa-circle text-slate-400 text-[8px] mr-2"></i> 기타 마찰/접촉</span>
+                        <span class="font-bold text-slate-900">283명 (25.2%)</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Deep Dive Section: Peak Hours (14시~16시) Cross Analysis -->
+        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-100 gap-4">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">집중 심층 분석</span>
+                        <h3 class="text-xl font-extrabold text-slate-900">14시~16시 위험 시간대 교차 분석</h3>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">인적 요인 취약 시간대와 차대차 사고의 물리적 위험 결합 현황</p>
+                </div>
+                <div class="flex items-center space-x-3 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                    <div class="text-right px-2">
+                        <span class="text-xs text-slate-400 block">해당 시간대 사고</span>
+                        <strong class="text-sm font-bold text-slate-800">262건</strong>
+                    </div>
+                    <div class="h-6 w-px bg-slate-300"></div>
+                    <div class="text-right px-2">
+                        <span class="text-xs text-slate-400 block">해당 시간대 사망</span>
+                        <strong class="text-sm font-bold text-red-600">271명</strong>
+                    </div>
+                    <div class="h-6 w-px bg-slate-300"></div>
+                    <div class="text-right px-2">
+                        <span class="text-xs text-slate-400 block">해당 시간대 부상</span>
+                        <strong class="text-sm font-bold text-amber-600">184명</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Left Chart -->
+                <div class="lg:col-span-5 bg-slate-50 rounded-xl p-6 border border-slate-200/70">
+                    <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                        <i class="fa-solid fa-bullseye text-red-500 mr-2"></i> 14시~16시 내 차대차 사고 점유율
+                    </h4>
+                    <div class="h-56 relative">
+                        <canvas id="peakHourChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-600 leading-relaxed">
+                        <p class="font-semibold text-slate-800 mb-1">💡 전략적 핵심 포인트</p>
+                        14~16시 사고(262건)의 <strong class="text-blue-600">48.8%(128건)</strong>, 사망자(271명)의 <strong class="text-red-600">48.7%(132명)</strong>가 <strong>차대차 유형</strong>에 몰려있어 주간 차량 간 충돌 대책이 최고 시급 과제입니다.
+                    </div>
+                </div>
+
+                <!-- Right Analysis -->
+                <div class="lg:col-span-7 space-y-4">
+                    <h4 class="text-sm font-bold text-slate-800">14시~16시 차대차 사고 세부 원인 및 구조 특성</h4>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Card 1 -->
+                        <div class="p-4 rounded-xl bg-red-50/60 border border-red-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-red-700"><i class="fa-solid fa-car-burst mr-1.5"></i> 충돌 사고</span>
+                                <span class="text-xs font-black bg-red-200 text-red-800 px-2 py-0.5 rounded">68명 사망</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                식후 식곤증 및 오후 집중력 급저하로 인한 <strong>신호 위반</strong> 및 <strong>중앙선 침범</strong> 등 중대 과실 사고 집중 발생.
+                            </p>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-amber-700"><i class="fa-solid fa-truck-monster mr-1.5"></i> 추돌 사고</span>
+                                <span class="text-xs font-black bg-amber-200 text-amber-800 px-2 py-0.5 rounded">38명 사망</span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                졸음운전 및 전방 주시 태만(Distracted Driving)에 따른 <strong>제동 지연</strong>으로 고속도로/간선도로 연쇄 추돌 야기.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Highlight Box -->
+                    <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200 flex items-start space-x-3">
+                        <div class="p-2 bg-indigo-600 text-white rounded-lg mt-0.5">
+                            <i class="fa-solid fa-user-doctor text-base"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h5 class="text-xs font-bold text-indigo-950">생존 및 응급 구조적 특이점</h5>
+                                <span class="text-[10px] bg-indigo-200 text-indigo-800 font-extrabold px-1.5 py-0.5 rounded">골든타임 핵심</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                해당 구간 차대차 사고 부상자는 <strong class="text-indigo-900">161명</strong>으로 집계되어, 2025년 전체 기조(사망 &gt; 부상)와 달리 <strong class="text-indigo-700 font-bold underline">부상자 수가 사망자 수를 상회하는 유일한 구간</strong>입니다. 신속한 응급의료 연계 시 생존율을 크게 높일 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section 5: Strategic Policy Recommendations -->
+        <section id="policy-section" class="space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-black text-slate-900">결론 및 3대 전략적 정책 제언</h3>
+                    <p class="text-xs sm:text-sm text-slate-500">2025년 교통안전 목표 달성을 위한 데이터 기반 실행 방안</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Policy 1 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-blue-400 transition group">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-radar"></i>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">전략 제언 01</span>
+                        <h4 class="text-base font-bold text-slate-900 mt-1 mb-3">DDA 기반 14~16시 정밀 단속 체계 구축</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            오후 시간대 사망 밀집 해소를 위해 해당 시간 사고 다발 구역 중심 경찰력 및 무인 단속 장비를 집중 배치하는 <strong>'정밀 타격형 단속(Precision Enforcement)'</strong>을 시행합니다. 교차로 신호위반 및 중앙선 침범 감시를 강화합니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs text-blue-600 font-semibold">
+                        <span>시행 방안: 교차로 감시 및 이동식 단속</span>
+                        <i class="fa-solid fa-arrow-right ml-auto"></i>
+                    </div>
+                </div>
+
+                <!-- Policy 2 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-amber-400 transition group">
+                    <div>
+                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">전략 제언 02</span>
+                        <h4 class="text-base font-bold text-slate-900 mt-1 mb-3">인지 보조 & 졸음 방지 기술적 개입</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            14시~16시 충돌(68명)·추돌(38명) 예방을 위해 상용차 대상 <strong>졸음운전 경고 장치 보급</strong>을 확대하고, 간선도로 내 졸음쉼터 확충 및 도로 요철(Rumble Strips)을 설치하여 물리적 각성 상태를 유지합니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs text-amber-600 font-semibold">
+                        <span>시행 방안: 도로 시설 보강 & 센서 탑재</span>
+                        <i class="fa-solid fa-arrow-right ml-auto"></i>
+                    </div>
+                </div>
+
+                <!-- Policy 3 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:border-emerald-400 transition group">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-truck-medical"></i>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">전략 제언 03</span>
+                        <h4 class="text-base font-bold text-slate-900 mt-1 mb-3">Golden Hour 응급 의료 체계 최적화</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            14시~16시 부상자(161명)가 사망자로 전이되지 않도록 권역외상센터와 긴급 이송망 간 동선 패스트트랙을 구축하고, 중증 부상자 구조 및 이송의 기동성을 극대화합니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs text-emerald-600 font-semibold">
+                        <span>시행 방안: 권역외상센터 연계 이송 최적화</span>
+                        <i class="fa-solid fa-arrow-right ml-auto"></i>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Interactive Policy Impact Simulator -->
+        <section class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center space-x-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full mb-3">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>인터랙티브 시뮬레이터</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">정책 적용에 따른 인명 감소 예측 시뮬레이션</h3>
+                <p class="text-xs text-slate-400 mb-6">
+                    14시~16시 차대차 사고 단속 강화 및 졸음 방지 시스템 도입 시 예상되는 인명 구호 효과를 슬라이더로 확인해보세요.
+                </p>
+
+                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700 space-y-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-2 text-sm">
+                            <label for="reductionRange" class="font-medium text-slate-200">14시~16시 차대차 사고 감소 목표율</label>
+                            <span id="rangeValue" class="font-bold text-emerald-400 text-lg">20%</span>
+                        </div>
+                        <input id="reductionRange" type="range" min="5" max="50" step="5" value="20" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>5% (최소)</span>
+                            <span>25% (기본 목표)</span>
+                            <span>50% (최대 개입)</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700/80 text-center">
+                        <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-700">
+                            <span class="text-xs text-slate-400 block mb-1">예상 구직 사망자 수</span>
+                            <span id="savedLives" class="text-2xl font-extrabold text-emerald-400">26명</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-lg border border-slate-700">
+                            <span class="text-xs text-slate-400 block mb-1">연간 사망 감소율 환산</span>
+                            <span id="totalPercent" class="text-2xl font-extrabold text-blue-400">1.0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-slate-500 py-8 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>2025년 교통사고 사망 현황 및 위험 요인 분석 보고서 | 데이터 기반 교통안전 정책 분석 시스템</p>
+            <p class="text-slate-600">본 대시보드는 2025년 정밀 분석 데이터를 토대로 제작된 보고서 웹 인터페이스입니다.</p>
+        </div>
+    </footer>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Accident Types Donut Chart
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            new Chart(typeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['차대차 사고', '차대사람 사고', '차량단독 사고'],
+                    datasets: [{
+                        data: [1121, 899, 527],
+                        backgroundColor: [
+                            '#2563eb', // 차대차 (Blue)
+                            '#10b981', // 차대사람 (Emerald)
+                            '#8b5cf6'  // 차량단독 (Purple)
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15,
+                                font: { family: 'Noto Sans KR', size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const total = 2549;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return ` 사망자: ${value.toLocaleString()}명 (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            // 2. Vehicle to Vehicle Subtypes Horizontal Bar Chart
+            const subTypeCtx = document.getElementById('subTypeChart').getContext('2d');
+            new Chart(subTypeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['충돌 (정면/측면)', '추돌 (연쇄추돌)', '기타 (측면접촉 등)'],
+                    datasets: [{
+                        label: '사망자 수(명)',
+                        data: [512, 326, 283],
+                        backgroundColor: [
+                            '#ef4444', // 충돌
+                            '#f59e0b', // 추돌
+                            '#94a3b8'  // 기타
+                        ],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` 사망자: ${context.raw}명`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: 'Noto Sans KR', size: 11 } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Noto Sans KR', size: 11, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            // 3. Peak Hour (14-16h) Donut Chart
+            const peakCtx = document.getElementById('peakHourChart').getContext('2d');
+            new Chart(peakCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['차대차 사고 (132명)', '기타 유형 사고 (139명)'],
+                    datasets: [{
+                        data: [132, 139],
+                        backgroundColor: ['#2563eb', '#cbd5e1'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { family: 'Noto Sans KR', size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 4. Simulator Interaction Logic
+            const rangeInput = document.getElementById('reductionRange');
+            const rangeValueDisplay = document.getElementById('rangeValue');
+            const savedLivesDisplay = document.getElementById('savedLives');
+            const totalPercentDisplay = document.getElementById('totalPercent');
+
+            rangeInput.addEventListener('input', (e) => {
+                const percent = parseInt(e.target.value);
+                rangeValueDisplay.textContent = `${percent}%`;
+
+                // 14시~16시 차대차 사망자 = 132명
+                const saved = Math.round(132 * (percent / 100));
+                // 전체 사망자 = 2549명
+                const totalPercent = ((saved / 2549) * 100).toFixed(1);
+
+                savedLivesDisplay.textContent = `${saved}명`;
+                totalPercentDisplay.textContent = `${totalPercent}%`;
+            });
+
+        });
+    </script>
+</body>
+</html>
