@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 전국 대학 물리학과 지표 분석 및 우수 대학 선정 보고서</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
+
+    <!-- Header / Navigation -->
+    <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-lg border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <a href="../index.html" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg transition border border-slate-700 flex items-center justify-center gap-1 text-xs font-semibold" title="홈으로 이동">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">홈</span>
+                </a>
+                <div class="p-2 bg-indigo-600 rounded-lg shadow-md">
+                    <i data-lucide="atom" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold leading-tight">2025 전국 대학 물리학과 지표 분석 보고서</h1>
+                    <p class="text-xs text-slate-400">전국 43개 물리학 관련 학과/학부 정량 지표 진단</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-2 text-xs bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span class="text-slate-300">데이터 출처: 2025 대학 공시 지표</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+
+        <!-- Hero Title Banner -->
+        <section class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-3xl">
+                <span class="inline-block px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold rounded-md mb-3">
+                    2025 대입 및 학과 경쟁력 리포트
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-4">
+                    전국 주요 대학 물리학 관련 학과 종합 평가 및 우수 대학 선정
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    순수 물리학과부터 반도체·나노·전자바이오 물리학부까지, 전국 43개 학과의 신입생 경쟁률, 졸업생 취업률, 연간 등록금을 정밀 진단하여 수험생 및 교육 관계자를 위한 객관적 전략을 제시합니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Category Best Universities (Top Highlights) -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="trophy" class="w-5 h-5 text-amber-500"></i>
+                    항목별 우수 대학 선정 (Best Universities by Category)
+                </h3>
+                <span class="text-xs text-slate-500">핵심 대표 지표 1위 대학</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <!-- Best 1: Competition -->
+                <div onclick="openModal('중앙대학교')" class="glass-card p-5 rounded-2xl border-l-4 border-indigo-600 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 text-[11px] font-bold rounded-md">선호도 1위</span>
+                        <i data-lucide="flame" class="w-5 h-5 text-indigo-600"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-900">중앙대학교</h4>
+                    <p class="text-xs text-slate-500 mb-3">물리학과 (본교)</p>
+                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500">신입생 경쟁률</span><span class="font-extrabold text-indigo-600">24.3 : 1</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">취업률</span><span class="font-semibold text-slate-700">67.6%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">등록금</span><span class="font-mono text-slate-700">8,363.8천원</span></div>
+                    </div>
+                </div>
+
+                <!-- Best 2: Employment -->
+                <div onclick="openModal('포항공과대학교')" class="glass-card p-5 rounded-2xl border-l-4 border-emerald-500 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 text-[11px] font-bold rounded-md">아웃풋 1위</span>
+                        <i data-lucide="briefcase" class="w-5 h-5 text-emerald-600"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-900">포항공과대학교</h4>
+                    <p class="text-xs text-slate-500 mb-3">물리학과 (본교)</p>
+                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500">취업률</span><span class="font-extrabold text-emerald-600">79.8%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">신입생 경쟁률</span><span class="font-semibold text-slate-700">9.5 : 1</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">등록금</span><span class="font-mono text-slate-700">5,613.5천원</span></div>
+                    </div>
+                </div>
+
+                <!-- Best 3: Lowest Tuition -->
+                <div onclick="openModal('광주과학기술원')" class="glass-card p-5 rounded-2xl border-l-4 border-blue-500 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-[11px] font-bold rounded-md">경제성 1위</span>
+                        <i data-lucide="coins" class="w-5 h-5 text-blue-600"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-900">광주과학기술원</h4>
+                    <p class="text-xs text-slate-500 mb-3">물리·광과학과 (본교)</p>
+                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500">연간 등록금</span><span class="font-extrabold text-blue-600">2,060.0천원</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">신입생 경쟁률</span><span class="font-semibold text-slate-700">18.3 : 1</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">취업률</span><span class="font-semibold text-slate-700">62.1%</span></div>
+                    </div>
+                </div>
+
+                <!-- Best 4: Convergence / Specialty -->
+                <div onclick="openModal('가천대학교')" class="glass-card p-5 rounded-2xl border-l-4 border-purple-500 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="px-2.5 py-0.5 bg-purple-50 text-purple-700 text-[11px] font-bold rounded-md">첨단 융합 1위</span>
+                        <i data-lucide="cpu" class="w-5 h-5 text-purple-600"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-slate-900">가천대학교</h4>
+                    <p class="text-xs text-slate-500 mb-3">반도체물리학과 (본교)</p>
+                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500">신입생 경쟁률</span><span class="font-extrabold text-purple-600">22.9 : 1</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">취업률</span><span class="font-semibold text-slate-700">66.5%</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">등록금</span><span class="font-mono text-slate-700">8,812.6천원</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Visual Analytics Section (Charts) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Chart 1: Top 10 Competition Rates -->
+            <div class="glass-card p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-indigo-600"></i>
+                            신입생 경쟁률 Top 10 학과 (:1)
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">수도권 사립대 및 선호 학과 중심</p>
+                    </div>
+                </div>
+                <div class="relative h-72 w-full">
+                    <canvas id="competitionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Top 10 Employment Rates -->
+            <div class="glass-card p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-600"></i>
+                            졸업생 취업률 Top 10 학과 (%)
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">연구 역량 및 실무 인프라 중심</p>
+                    </div>
+                </div>
+                <div class="relative h-72 w-full">
+                    <canvas id="employmentChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Special Feature Analysis Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i data-lucide="layers" class="w-5 h-5 text-purple-600"></i>
+                        융합 및 특성화 학과 트렌드
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        최근 물리학과는 반도체, 나노, 바이오 등 첨단 산업과의 결합을 가속화하고 있습니다.
+                    </p>
+                    
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-purple-50/70 rounded-xl border border-purple-100">
+                            <div class="font-bold text-purple-900 mb-1">Convergence + Location 결합</div>
+                            <p class="text-slate-600">가천대(반도체물리 22.9:1)와 강원대(반도체물리 9.3:1) 사례처럼 동일한 특성화 학과라도 수도권 입지에 따라 선호도 격차가 2배 이상 발생합니다.</p>
+                        </div>
+                        <div class="p-3 bg-slate-100/70 rounded-xl border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-1">다양한 특성화 모집 단위</div>
+                            <p class="text-slate-600">가천대·강원대·창원대·군산대(반도체), 광운대(전자바이오), 국민대(나노전자), 공주대(데이터정보) 등이 활성화되어 있습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i data-lucide="git-fork" class="w-5 h-5 text-blue-600"></i>
+                        학부 단위 모집의 유연성
+                    </h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        학과가 아닌 학부 단위 모집으로 신입생에게 탐색 기간을 제공합니다.
+                    </p>
+                    
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-100">
+                            <div class="font-bold text-blue-900 mb-1">전공 적합성 리스크 감소</div>
+                            <p class="text-slate-600">기초 물리학과 심화/연계 전공 사이 탐색 기회를 부여하여 중도 탈락율을 줄이고 넓은 학문적 토대를 다지게 합니다.</p>
+                        </div>
+                        <div class="p-3 bg-slate-100/70 rounded-xl border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-1">대표 학부 모집 대학</div>
+                            <p class="text-slate-600">서울대(물리·천문학부), 숙명여대(신소재물리학부), 고려대 세종(반도체물리학부), 경상국립대(수학물리학부) 등</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                        <i data-lucide="compass" class="w-5 h-5 text-emerald-600"></i>
+                        수험생을 위한 3대 전략 제언
+                    </h3>
+                    <ul class="space-y-2 text-xs text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="w-5 h-5 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center shrink-0 text-[10px]">1</span>
+                            <span><strong>융합 전공과 진로 연계:</strong> 반도체·나노 등 실용 학문 결합 학과는 탄탄한 산업계 수요를 바탕으로 진학 유연성이 높습니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-5 h-5 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center shrink-0 text-[10px]">2</span>
+                            <span><strong>연구 인프라 확인:</strong> 포항공대·서강대처럼 높은 취업률을 내는 대학은 개별 학과의 연구비 및 산학 네트워크 차이가 핵심입니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-5 h-5 bg-emerald-100 text-emerald-700 font-bold rounded-full flex items-center justify-center shrink-0 text-[10px]">3</span>
+                            <span><strong>과학기술원 대안 활용:</strong> GIST, UNIST, KAIST 등은 저렴한 등록금과 고취업률을 갖춘 최고의 고효율 선택지입니다.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Interactive Data Table Section -->
+        <section class="glass-card rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="table" class="w-5 h-5 text-indigo-600"></i>
+                        전국 43개 대학 물리학과/학부 종합 현황표
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">대학명, 개설 학과, 신입생 경쟁률, 취업률, 등록금 정렬 및 필터링 제공</p>
+                </div>
+                
+                <!-- Search & Filter Controls -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input id="searchInput" oninput="filterTable()" type="text" placeholder="대학명/학과명 검색..." class="pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-36 sm:w-48">
+                    </div>
+                    <select id="typeFilter" onchange="filterTable()" class="px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="all">전체 학과</option>
+                        <option value="융합">융합/특성화 학과 (반도체/나노 등)</option>
+                        <option value="순수">순수 물리학과/부</option>
+                    </select>
+                    <select id="sortSelect" onchange="filterTable()" class="px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="compDesc">경쟁률 높은순</option>
+                        <option value="compAsc">경쟁률 낮은순</option>
+                        <option value="empDesc">취업률 높은순</option>
+                        <option value="tuitionAsc">등록금 낮은순</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100/80 text-slate-600 font-semibold border-b border-slate-200">
+                            <th class="p-3.5">학교명</th>
+                            <th class="p-3.5">구분</th>
+                            <th class="p-3.5">개설 학과/학부 예시</th>
+                            <th class="p-3.5 text-right cursor-pointer hover:bg-slate-200/50" onclick="setSort('comp')">신입생 경쟁률 (:1) ↕</th>
+                            <th class="p-3.5 text-right cursor-pointer hover:bg-slate-200/50" onclick="setSort('emp')">취업률 (%) ↕</th>
+                            <th class="p-3.5 text-right cursor-pointer hover:bg-slate-200/50" onclick="setSort('tuition')">연간 평균 등록금 (천원) ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody id="univTableBody" class="divide-y divide-slate-200 bg-white">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                <span>총 <strong id="tableCount" class="text-slate-800">43</strong>개 학과 표시 중</span>
+                <span>* 클릭 시 대학별 상세 정보를 볼 수 있습니다.</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- University Profile Modal -->
+    <div id="univModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modalContent">
+                <!-- Dynamic Content Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // Lucide Icons initialization
+        lucide.createIcons();
+
+        // 43 Universities Complete Dataset
+        const physicsData = [
+            { name: '중앙대학교', campus: '본교', dept: '물리학과', comp: 24.3, emp: 67.6, tuition: 8363.8 },
+            { name: '가천대학교', campus: '본교', dept: '반도체물리학과', comp: 22.9, emp: 66.5, tuition: 8812.6 },
+            { name: '성균관대학교', campus: '본교', dept: '물리학과', comp: 22.4, emp: 71.3, tuition: 8905.2 },
+            { name: '한양대학교', campus: '본교', dept: '물리학과', comp: 22.0, emp: 68.9, tuition: 9016.3 },
+            { name: '건국대학교', campus: '본교', dept: '물리학과', comp: 21.7, emp: 66.8, tuition: 8748.3 },
+            { name: '서강대학교', campus: '본교', dept: '물리학과', comp: 20.1, emp: 73.1, tuition: 8439.4 },
+            { name: '동국대학교', campus: '본교', dept: '물리학과', comp: 18.7, emp: 66.3, tuition: 8392.5 },
+            { name: '광주과학기술원', campus: '본교', dept: '물리·광과학과', comp: 18.3, emp: 62.1, tuition: 2060.0 },
+            { name: '아주대학교', campus: '본교', dept: '물리학과, 물리·양자과학전공', comp: 17.5, emp: 69.3, tuition: 8794.9 },
+            { name: '울산과학기술원', campus: '본교', dept: '물리학과', comp: 17.3, emp: 67.3, tuition: 6554.2 },
+            { name: '세종대학교', campus: '본교', dept: '물리천문학과', comp: 16.3, emp: 61.5, tuition: 8388.3 },
+            { name: '경희대학교', campus: '본교', dept: '물리학과, 응용물리학과', comp: 16.2, emp: 64.8, tuition: 8441.6 },
+            { name: '가톨릭대학교', campus: '본교', dept: '물리학과', comp: 15.6, emp: 62.5, tuition: 7493.6 },
+            { name: '서울시립대학교', campus: '본교', dept: '물리학과', comp: 15.5, emp: 63.6, tuition: 2529.6 },
+            { name: '숭실대학교', campus: '본교', dept: '물리학과', comp: 15.4, emp: 67.7, tuition: 8408.2 },
+            { name: '고려대학교', campus: '본교', dept: '물리학과', comp: 14.7, emp: 69.9, tuition: 8814.5 },
+            { name: '광운대학교', campus: '본교', dept: '전자바이오물리학과', comp: 14.3, emp: 61.0, tuition: 8330.8 },
+            { name: '한국외국어대학교', campus: '본교', dept: '전자물리학과', comp: 14.3, emp: 64.5, tuition: 7594.2 },
+            { name: '인하대학교', campus: '본교', dept: '물리학과', comp: 13.6, emp: 68.5, tuition: 8223.8 },
+            { name: '숙명여자대학교', campus: '본교', dept: '신소재물리학부', comp: 12.2, emp: 62.5, tuition: 8593.0 },
+            { name: '충북대학교', campus: '본교', dept: '물리학과', comp: 11.8, emp: 56.8, tuition: 4286.5 },
+            { name: '국민대학교', campus: '본교', dept: '나노전자물리학과', comp: 11.6, emp: 66.5, tuition: 8376.9 },
+            { name: '연세대학교', campus: '본교', dept: '물리학과', comp: 11.5, emp: 67.3, tuition: 9660.1 },
+            { name: '경북대학교', campus: '본교', dept: '물리학과', comp: 11.3, emp: 57.8, tuition: 4514.2 },
+            { name: '인천대학교', campus: '본교', dept: '물리학과', comp: 11.2, emp: 63.5, tuition: 4651.9 },
+            { name: '충남대학교', campus: '본교', dept: '물리학과', comp: 10.3, emp: 61.1, tuition: 4387.5 },
+            { name: '한국과학기술원', campus: '본교', dept: '물리학과', comp: 10.2, emp: 68.5, tuition: 6866.0 },
+            { name: '단국대학교', campus: '제2캠퍼스', dept: '물리학과', comp: 10.1, emp: 63.1, tuition: 8658.6 },
+            { name: '이화여자대학교', campus: '본교', dept: '물리학과', comp: 9.8, emp: 64.6, tuition: 9025.9 },
+            { name: '포항공과대학교', campus: '본교', dept: '물리학과', comp: 9.5, emp: 79.8, tuition: 5613.5 },
+            { name: '강원대학교', campus: '본교', dept: '반도체물리학과', comp: 9.3, emp: 57.7, tuition: 4179.9 },
+            { name: '국립공주대학교', campus: '본교', dept: '데이터정보물리학과', comp: 9.2, emp: 58.9, tuition: 3858.7 },
+            { name: '부산대학교', campus: '본교', dept: '물리학과', comp: 9.0, emp: 57.5, tuition: 4472.1 },
+            { name: '국립부경대학교', campus: '본교', dept: '물리학과', comp: 8.9, emp: 56.3, tuition: 4046.2 },
+            { name: '고려대학교(세종)', campus: '분교', dept: '반도체물리학부', comp: 8.6, emp: 59.9, tuition: 8939.5 },
+            { name: '전남대학교', campus: '본교', dept: '물리학과', comp: 7.4, emp: 57.6, tuition: 4193.3 },
+            { name: '전북대학교', campus: '본교', dept: '물리학과', comp: 7.4, emp: 58.9, tuition: 4447.7 },
+            { name: '서울대학교', campus: '본교', dept: '물리·천문학부', comp: 7.1, emp: 65.6, tuition: 6058.8 },
+            { name: '경상국립대학교', campus: '본교', dept: '물리전공, 수학물리학부', comp: 6.9, emp: 54.1, tuition: 4078.1 },
+            { name: '국립창원대학교', campus: '본교', dept: '반도체물리학전공', comp: 6.5, emp: 59.3, tuition: 3906.3 },
+            { name: '제주대학교', campus: '본교', dept: '물리학과', comp: 6.5, emp: 59.6, tuition: 4028.7 },
+            { name: '영남대학교', campus: '본교', dept: '물리학과', comp: 6.3, emp: 51.4, tuition: 7845.7 },
+            { name: '국립군산대학교', campus: '본교', dept: '반도체물리전공', comp: 4.4, emp: 54.0, tuition: 3897.3 }
+        ];
+
+        let currentSort = 'compDesc';
+
+        // Render Table Function
+        function renderTable(data) {
+            const tbody = document.getElementById('univTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition cursor-pointer';
+                tr.onclick = () => openModal(item.name);
+
+                // Is Special / Convergence Dept?
+                const isSpecial = item.dept.includes('반도체') || item.dept.includes('전자') || item.dept.includes('나노') || item.dept.includes('바이오') || item.dept.includes('데이터');
+                const deptBadge = isSpecial 
+                    ? `<span class="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 font-semibold rounded text-[10px]">${item.dept}</span>`
+                    : `<span class="text-slate-800">${item.dept}</span>`;
+
+                // Comp Highlight
+                const isHighComp = item.comp >= 20.0;
+                const compDisplay = isHighComp 
+                    ? `<span class="font-extrabold text-indigo-600">${item.comp.toFixed(1)} : 1</span>` 
+                    : `<span class="font-semibold text-slate-800">${item.comp.toFixed(1)} : 1</span>`;
+
+                // Emp Highlight
+                const isHighEmp = item.emp >= 70.0;
+                const empDisplay = isHighEmp 
+                    ? `<span class="font-extrabold text-emerald-600">${item.emp.toFixed(1)}%</span>` 
+                    : `<span class="font-semibold text-slate-700">${item.emp.toFixed(1)}%</span>`;
+
+                // Tuition Highlight
+                const isLowTuition = item.tuition <= 4500;
+                const tuitionDisplay = isLowTuition 
+                    ? `<span class="font-bold text-blue-600 font-mono">${item.tuition.toLocaleString()}천원</span>` 
+                    : `<span class="font-mono text-slate-700">${item.tuition.toLocaleString()}천원</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-slate-900 flex items-center gap-1.5">
+                        ${item.name}
+                        ${item.campus !== '본교' ? `<span class="text-[10px] text-slate-400 font-normal">(${item.campus})</span>` : ''}
+                    </td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded border bg-slate-100 text-slate-600 border-slate-200 text-[10px] font-medium">${item.campus}</span></td>
+                    <td class="p-3.5">${deptBadge}</td>
+                    <td class="p-3.5 text-right">${compDisplay}</td>
+                    <td class="p-3.5 text-right">${empDisplay}</td>
+                    <td class="p-3.5 text-right">${tuitionDisplay}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('tableCount').innerText = data.length;
+        }
+
+        // Sort Control Shortcut
+        function setSort(type) {
+            if (type === 'comp') currentSort = currentSort === 'compDesc' ? 'compAsc' : 'compDesc';
+            if (type === 'emp') currentSort = 'empDesc';
+            if (type === 'tuition') currentSort = 'tuitionAsc';
+            document.getElementById('sortSelect').value = currentSort;
+            filterTable();
+        }
+
+        // Filter and Sort Logic
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filterType = document.getElementById('typeFilter').value;
+            const sortVal = document.getElementById('sortSelect').value;
+
+            let result = physicsData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(query) || item.dept.toLowerCase().includes(query);
+                
+                const isSpecial = item.dept.includes('반도체') || item.dept.includes('전자') || item.dept.includes('나노') || item.dept.includes('바이오') || item.dept.includes('데이터');
+                let matchesType = true;
+                if (filterType === '융합') matchesType = isSpecial;
+                if (filterType === '순수') matchesType = !isSpecial;
+
+                return matchesSearch && matchesType;
+            });
+
+            // Sorting
+            if (sortVal === 'compDesc') result.sort((a, b) => b.comp - a.comp);
+            if (sortVal === 'compAsc') result.sort((a, b) => a.comp - b.comp);
+            if (sortVal === 'empDesc') result.sort((a, b) => b.emp - a.emp);
+            if (sortVal === 'tuitionAsc') result.sort((a, b) => a.tuition - b.tuition);
+
+            renderTable(result);
+        }
+
+        // Initialize Table
+        renderTable(physicsData);
+
+        // Chart 1: Competition Rates Top 10
+        const compTop10 = [...physicsData].sort((a, b) => b.comp - a.comp).slice(0, 10);
+        const compCtx = document.getElementById('competitionChart').getContext('2d');
+        new Chart(compCtx, {
+            type: 'bar',
+            data: {
+                labels: compTop10.map(d => d.name),
+                datasets: [{
+                    label: '신입생 경쟁률 (:1)',
+                    data: compTop10.map(d => d.comp),
+                    backgroundColor: 'rgba(79, 70, 229, 0.85)',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw} : 1` } }
+                },
+                scales: {
+                    x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Chart 2: Employment Rates Top 10
+        const empTop10 = [...physicsData].sort((a, b) => b.emp - a.emp).slice(0, 10);
+        const empCtx = document.getElementById('employmentChart').getContext('2d');
+        new Chart(empCtx, {
+            type: 'bar',
+            data: {
+                labels: empTop10.map(d => d.name),
+                datasets: [{
+                    label: '졸업생 취업률 (%)',
+                    data: empTop10.map(d => d.emp),
+                    backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw}%` } }
+                },
+                scales: {
+                    x: { min: 50, max: 85, grid: { color: '#f1f5f9' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Modal Functionality
+        function openModal(univName) {
+            const item = physicsData.find(d => d.name === univName);
+            if (!item) return;
+
+            const modalContent = document.getElementById('modalContent');
+            
+            // Generate description text
+            let desc = `${item.name} ${item.dept}는 2025 공시 데이터 기준 신입생 경쟁률 ${item.comp}:1, 취업률 ${item.emp}%, 연간 평균 등록금 ${item.tuition.toLocaleString()}천 원의 지표를 기록했습니다.`;
+            if (item.comp >= 20.0) desc += ` 높은 선호도를 보이는 최상위 인기 대학군에 속합니다.`;
+            if (item.emp >= 70.0) desc += ` 높은 졸업생 취업률을 바탕으로 뛰어난 교육/연구 아웃풋을 증명하고 있습니다.`;
+            if (item.tuition <= 4500) desc += ` 국공립 및 과학기술원 특성상 등록금 부담이 매우 적은 고효율 학과입니다.`;
+
+            modalContent.innerHTML = `
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2.5 py-0.5 text-xs font-bold rounded-md bg-indigo-100 text-indigo-800">${item.campus}</span>
+                    <h3 class="text-xl font-extrabold text-slate-900">${item.name}</h3>
+                </div>
+                <p class="text-xs text-indigo-600 font-semibold mb-4">${item.dept}</p>
+                
+                <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 mb-5">${desc}</p>
+                
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="p-3 bg-indigo-50/70 rounded-xl border border-indigo-100">
+                        <span class="text-[10px] text-slate-500 block">신입생 경쟁률</span>
+                        <span class="text-base font-extrabold text-indigo-600 mt-0.5 block">${item.comp} : 1</span>
+                    </div>
+                    <div class="p-3 bg-emerald-50/70 rounded-xl border border-emerald-100">
+                        <span class="text-[10px] text-slate-500 block">졸업생 취업률</span>
+                        <span class="text-base font-extrabold text-emerald-600 mt-0.5 block">${item.emp}%</span>
+                    </div>
+                    <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-100">
+                        <span class="text-[10px] text-slate-500 block">연간 등록금</span>
+                        <span class="text-sm font-extrabold text-blue-600 mt-1 block">${item.tuition.toLocaleString()}천원</span>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('univModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('univModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
